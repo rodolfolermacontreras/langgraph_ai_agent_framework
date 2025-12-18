@@ -153,18 +153,20 @@ Use this template when recording session updates in `docs/session_memory.md`.
   - Identified common learning patterns and prerequisites
 
 - Next steps / Plan:
-  - Session notes indicate emojis were used in documentation (against rules), but user confirmed to keep for now
-  - BIG PICTURE: 30+ notebooks still need educational enhancements (detailed explanations, inline comments, exercises)
-  - Three approach options identified:
-    1. Just-in-time improvement: Enhance notebooks as user encounters confusing ones during learning (RECOMMENDED)
-    2. Batch improvement by priority: Improve notebooks in groups based on immediate study needs
-    3. Full systematic rewrite: Improve all 30+ notebooks now (60-120 hours of work)
-  - WAITING FOR USER DECISION on which approach to take for notebook improvements
-  - Documentation framework is now complete; can focus on actual notebook content when user is ready
+  - CLARIFIED: Only `playground/` notebooks need enhancement, NOT the L1/L2/L3/L4 course notebooks
+  - L1/L2/L3/L4 notebooks are Udacity course materials - keep as reference, do not modify
+  - Playground folder currently has 3 notebooks:
+    - playground/01_basics_overview.ipynb - needs educational enhancement
+    - playground/02_code_examples.ipynb - needs educational enhancement
+    - playground/03_rag_kb.ipynb - COMPLETE (already fully enhanced with 7-step educational structure)
+  - Next: Enhance playground/01 and playground/02 to match playground/03 quality
+  - May create additional playground notebooks for specific learning experiments
+  - Documentation framework is now complete
 
 - Notes:
   - User rules established: No emojis (professional standards), no new docs unless specified, update session_memory.md as we go, track scripts and remove scaffolding, always use .venv, maintain big picture plan
-  - Template from `playground/03_rag_kb.ipynb` rewrite should be used for future notebook improvements
+  - Template from `playground/03_rag_kb.ipynb` rewrite should be used for all playground notebook improvements
+  - Scope correction: NOT enhancing 30+ course notebooks, ONLY playground notebooks we create
   - All work done in virtual environment (.venv)
   - No orphan scripts created this session
   - Git commit history clean with clear messages

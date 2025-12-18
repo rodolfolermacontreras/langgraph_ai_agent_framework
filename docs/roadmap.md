@@ -39,6 +39,24 @@ Stage 5 — Retrieval, Embeddings, and RAG (3-5 days)
   - Study `notebooks/L2_demo_05_RAG.ipynb`.
   - Build an embeddings + retriever demo using local in-memory store.
 
+Knowledge Base Agents & Reliability
+
+- **Goal:** Build agents that use a knowledge base (KB) for accurate, up-to-date answers while remaining resilient to missing or stale data.
+- **Design patterns:** Retrieval-Augmented Generation (RAG) with separation between retrieval and generation; retrieval scoring + reranking; fallback to safe responses when confidence is low.
+- **KB preparation:** Chunk documents (512–2,048 tokens), include metadata (source, date, type), and normalize text (cleaning, de-duplication).
+- **Embeddings & vector store:** Choose embeddings that match your domain; store vectors with metadata and use vector stores that support metadata filtering and efficient nearest-neighbor search.
+- **Retrieval quality:** Use hybrid retrieval (BM25 + embeddings) for better recall; rerank top-k candidates using a cross-encoder or re-ranker.
+- **Freshness & updates:** Implement an ingestion pipeline with incremental updates, content versioning, and last-updated timestamps. Add TTL or periodic re-embedding for frequently changing content.
+- **Context windows & chunking:** Limit retrieved context by token budget; prefer smaller, relevant chunks with overlap; add provenance snippets for transparency.
+- **Safety & hallucination mitigation:** Add explicit grounding prompts, include provenance citations in responses, and validate generated statements against retrieved sources when possible.
+- **Caching & latency:** Cache retrieval results for repeated queries, use async loaders for large ingestion, and add circuit-breaker logic for downstream timeouts.
+- **Observability & diagnostics:** Log retrieval traces, model token usage, latencies, and a retrieval confidence score. Capture diagnostic strings from the LLM SDK for failed/slow calls.
+- **Testing & metrics:** Track end-to-end metrics: MRR/Recall@k for retrieval, factuality score, user-facing accuracy, latency, and cost (tokens/RUs). Build unit tests for ingestion and integration tests for end-to-end RAG flows.
+- **Deployment & secrets:** Keep Foundry/API keys in `.env` (or CI secrets). Use rate-limit retries and region preferences, and enforce least-privilege access for KB stores.
+- **Next steps (playground):**
+  - Create a `playground/03_rag_kb.ipynb` that ingests a small sample KB, builds embeddings, runs retrieval, and shows provenance in responses.
+  - Add a test harness in `scripts/` to validate retrieval quality after each KB update.
+
 Stage 6 — Production Readiness & Tooling (ongoing)
 - Topics:
   - Observability, diagnostics, retry logic, rate-limiting (handle 429), and costs (RUs / tokens).

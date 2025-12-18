@@ -57,6 +57,14 @@ This file records the major actions, decisions, and artifacts produced during in
 
   Next steps: If this runner becomes part of CI, convert it into a test job or tool in the repo's CI configuration and add environment matrix settings as needed.
 
+  ## 2025-12-17: Removal of stray runner at repo root
+
+  - Action: Removed the stray `run_notebooks.py` that remained at the project root after moving the runner into `scripts/`.
+  - Reason: Prevent confusion and duplicate tooling. The canonical runner is now `scripts/run_notebooks.py`.
+  - Files affected:
+    - Deleted: `run_notebooks.py` (repo root)
+
+
 ## Team Rules (improved)
 
 Purpose: a concise, enforceable set of rules to keep the workspace tidy, auditable, and reproducible.

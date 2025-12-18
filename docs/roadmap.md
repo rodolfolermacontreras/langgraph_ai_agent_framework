@@ -51,3 +51,19 @@ Tips for Learning:
 - Ask for one small, guided project to build from scratch (I can propose one).
 
 Roadmap next-step: Create focused notebooks for `RAG`, `Text2SQL`, and `LangGraph` examples in `playground/` once you're comfortable with Stages 0–2.
+
+Foundry (Microsoft Foundry) setup and local `.env` usage
+- Create a local `.env` file in the project root with the following keys (do NOT commit this file):
+  - `FOUNDRY_PROJECT_ENDPOINT` — the project endpoint URL
+  - `FOUNDRY_PROJECT_REGION` — the region (e.g., `westus`)
+  - `FOUNDRY_DEPLOYMENT_NAME` — deployment name (e.g., `gpt-4.1`)
+  - `FOUNDRY_API_KEY` — your secret project API key
+
+- Example workflow in notebooks:
+  1. Install `python-dotenv` in your local environment: `pip install python-dotenv`.
+  2. Load env vars in a notebook using `from dotenv import load_dotenv; load_dotenv()`.
+  3. Read values from `os.environ` and configure your client SDK with the foundry endpoint, deployment name, and key.
+
+- Security notes:
+  - Keep `.env` out of version control and never paste secrets into shared notebooks.
+  - Use `FOUNDRY_API_KEY` only from secure environments or CI secrets when deploying.

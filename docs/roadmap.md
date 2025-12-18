@@ -18,7 +18,7 @@ This comprehensive learning roadmap is designed for developers who know Python f
 
 ## Stage 0 — Foundations: Understanding LLMs & Basic Interactions (1-2 days)
 
-### 🎯 Learning Objectives
+### Learning Objectives
 By the end of this stage, you will:
 - Understand what Large Language Models (LLMs) are and how they work
 - Know how to make programmatic API calls to LLMs
@@ -413,7 +413,7 @@ By the end of this stage, you will:
 
 ---
 
-## 🎓 Learning Tips & Best Practices
+## Learning Tips & Best Practices
 
 ### Study Strategies
 - **Don't skip stages:** Each builds on the previous one
@@ -455,7 +455,7 @@ By the end of this stage, you will:
 
 ---
 
-## 📚 Recommended Reading Order
+## Recommended Reading Order
 
 ### For Visual Learners
 1. Read this roadmap completely first
@@ -484,7 +484,7 @@ By the end of this stage, you will:
 
 ---
 
-## ⚙️ Environment Setup
+## Environment Setup
 
 ### Microsoft Foundry Configuration
 
@@ -557,7 +557,7 @@ llm = Ollama(model="llama2")
 
 ---
 
-## 📊 Visual Learning Flow Diagram
+## Visual Learning Flow Diagram
 
 The flow diagram below shows your complete learning journey from fundamentals to production-ready agents.
 
@@ -608,7 +608,7 @@ flowchart TD
 
 ---
 
-## 🎯 Advanced Topics (After Completing Stages 0-6)
+## Advanced Topics (After Completing Stages 0-6)
 
 Once you've mastered the fundamentals, explore these advanced topics:
 
@@ -657,7 +657,7 @@ Enable agents to query structured data:
 
 ---
 
-## 🐛 Troubleshooting Common Issues
+## Troubleshooting Common Issues
 
 ### "No .env file found" Error
 
@@ -708,7 +708,7 @@ If notebooks won't run:
 
 ---
 
-## 📈 Tracking Your Progress
+## Tracking Your Progress
 
 ### Weekly Check-ins
 
@@ -736,7 +736,7 @@ You're ready to move on when you can:
 
 ---
 
-## 🎉 What's Next After Completion?
+## What's Next After Completion
 
 ### Build Your Portfolio
 1. **Personal Projects:** Build agents that solve real problems for you
@@ -760,7 +760,7 @@ You're ready to move on when you can:
 
 ---
 
-## 📞 Getting Help
+## Getting Help
 
 ### When You're Stuck
 1. **Read error messages carefully** — they usually tell you what's wrong

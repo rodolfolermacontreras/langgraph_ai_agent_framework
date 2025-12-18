@@ -2,7 +2,7 @@
 
 This is your comprehensive guide to all notebooks in the repository. Each notebook is designed to teach you specific concepts about AI agents, LangChain, and LangGraph. This guide explains **what** each notebook teaches, **why** it matters, **when** to use it, and **how** it fits into your learning journey.
 
-## 📖 How to Use This Guide
+## How to Use This Guide
 
 ### Finding the Right Notebook
 
@@ -30,7 +30,7 @@ This is your comprehensive guide to all notebooks in the repository. Each notebo
 
 ---
 
-## 🎯 Playground Notebooks (Start Here!)
+## Playground Notebooks (Start Here)
 
 These notebooks are designed as gentle introductions with extensive explanations. Perfect for learning from scratch.
 
@@ -129,7 +129,7 @@ RAG is THE pattern for building knowledge-grounded AI agents. It prevents halluc
 
 ---
 
-## 📚 L1 Notebooks: Foundations & Agent Basics
+## L1 Notebooks: Foundations & Agent Basics
 
 The L1 series teaches you to build agents from scratch, understanding every component before using frameworks.
 
@@ -185,7 +185,7 @@ This is hands-on practice with the raw OpenAI SDK before using frameworks. Under
 
 ---
 
-## 🔗 L2 Notebooks: LangChain Framework Mastery
+## L2 Notebooks: LangChain Framework Mastery
 
 The L2 series introduces LangChain—a powerful framework for building LLM applications with composable components.
 

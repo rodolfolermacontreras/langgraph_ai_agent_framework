@@ -47,6 +47,16 @@ This file records the major actions, decisions, and artifacts produced during in
 
   Next steps: If you want executed artifacts removed from git history as well, I can prepare a history-rewrite plan (uses `git filter-repo` or BFG) but this requires force-push and coordination with other collaborators.
 
+  ## 2025-12-17: Move runner into `scripts/`
+
+  - Action: Moved the temporary notebook runner from project root into `scripts/run_notebooks.py` and added a header and usage notes.
+  - Reason: Per housekeeping rules, scripts used for validation or CI belong in `scripts/`. This keeps the project root tidy and makes the utility discoverable.
+  - Files affected:
+    - Added: `scripts/run_notebooks.py` (moved and documented)
+    - Removed: `run_notebooks.py` at project root
+
+  Next steps: If this runner becomes part of CI, convert it into a test job or tool in the repo's CI configuration and add environment matrix settings as needed.
+
 ## Team Rules (improved)
 
 Purpose: a concise, enforceable set of rules to keep the workspace tidy, auditable, and reproducible.

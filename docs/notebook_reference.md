@@ -200,3 +200,157 @@ This document summarizes the purpose, tools, and topics covered in each notebook
 - Continue updating this file as new notebooks are added or existing ones are changed.
 - Ensure all scripts and experiments are tracked and documented; remove or integrate scaffolding code as needed.
 - Commit this update to version control as a major documentation refresh.
+
+---
+
+## L4_demo_01_persisting_memory.ipynb
+**Purpose:** Demonstrates persisting conversational memory to a SQLite backend (SqliteSaver) so sessions can be resumed and audited.
+**Tools/Libraries:** langgraph, langgraph.checkpoints (MemorySaver, SqliteSaver), sqlite3, Python stdlib
+**Topics:** run_graph helper, StateGraph with MessageState, MemorySaver vs SqliteSaver, database schema (checkpoints, writes), metadata snapshots, thread_id-based session resumption, inspecting and querying `memory.db`.
+
+---
+
+## L4_demo_02_rag_pipelines.ipynb
+**Purpose:** Explains Retrieval-Augmented Generation (RAG) pipelines end-to-end and demonstrates a sample e-commerce support use case.
+**Tools/Libraries:** embeddings (Hugging Face / OpenAI), Chroma or in-memory vector store, text-splitter utilities, langchain-style loaders
+**Topics:** retrieval → augmentation → generation flow, data collection and preprocessing, chunking and metadata, embedding generation, vector DB storage, example: retrieving return policy for electronics.
+
+---
+
+## L4_demo_03_embeddings.ipynb
+**Purpose:** Builds intuition for embeddings generation, similarity search, and visualization (PCA) across providers (Hugging Face, OpenAI).
+**Tools/Libraries:** sentence-transformers or OpenAI embeddings, numpy, scikit-learn (PCA), matplotlib
+**Topics:** EmbeddingsFactory abstraction, embedding generation, semantic similarity (dot product), dimensionality reduction for visualization, provider trade-offs (dimension, quality, cost).
+
+---
+
+## L4_exercise_01_kb_agent_challenge.ipynb
+**Purpose:** Hands-on challenge to build a Knowledge Base (KB) agent using RAG: load docs, vectorize, retrieve, and generate grounded answers with provenance.
+**Tools/Libraries:** Chroma/FAISS, embedding provider, text splitter, LangGraph StateGraph, Chat LLM wrapper
+**Topics:** document loading & vectorization, agent node retrieving context, augment + generate nodes, conditional routing, chunking, provenance and confidence thresholds.
+
+---
+
+## L4_demo_04_agentic_decisions_rag.ipynb
+**Purpose:** Extends a RAG pipeline with agentic decision-making: evaluate retrieval quality and optionally trigger web research when retrieval is insufficient.
+**Tools/Libraries:** LangGraph, retriever, small evaluator LLM chain, web search tool (tavily or similar)
+**Topics:** retrieve → evaluator → (researcher | augment) → generate flow; routers to direct control flow; looping researcher node; cost/latency trade-offs for online search.
+
+---
+
+## L4_demo_05_langmem_longterm_memory.ipynb
+**Purpose:** Demonstrates long-term memory via LangMem: persistent, vector-backed memory store for agent preferences and facts across sessions.
+**Tools/Libraries:** langmem (OpenAIMemoryStore or equivalent), LangGraph, ReAct agent utilities
+**Topics:** create_react_agent with memory store, manage_memory and search_memory tools, session examples (save preference, retrieve across sessions), tool-based memory management.
+
+---
+
+## L4_demo_06_reliability_observability.ipynb
+**Purpose:** Introduces reliability concepts for AI agents: metrics, testing vs evaluation, observability basics, and operational concerns.
+**Tools/Libraries:** logging, metrics libs (prometheus client examples), simple tracing utilities
+**Topics:** accuracy/efficiency/cost KPIs, evaluation vs testing, logging & tracing, decision transparency, alerting, and suggested continuous evaluation loops.
+
+---
+
+## L4_demo_07_hitl_workflows.ipynb
+**Purpose:** Implements Human-in-the-Loop (HITL) controls and breakpoints in LangGraph workflows for manual approval, edits, and supervised tool calls.
+**Tools/Libraries:** LangGraph, input stubs for review, MessageState, MemorySaver for checkpointing during approvals
+**Topics:** interrupt_before breakpoints, human approval flows (approve/abort/edit), resume with edited state, multi-step approval after tool calls, thread_id session handling.
+
+---
+
+## L4_demo_08_mlflow_observability.ipynb
+**Purpose:** Integrates MLflow tracing and autologging into LangGraph workflows to capture runs, inputs/outputs, token usage, and artifacts.
+**Tools/Libraries:** mlflow, mlflow.langchain.autolog (if available), LangGraph, local MLflow server examples
+**Topics:** mlflow.set_tracking_uri, mlflow experiments/runs, autologging LLM inputs/outputs, node-level artifacts, run timelines, and visual inspection in MLflow UI.
+
+---
+
+## L4_demo_09_ragas_evaluation.ipynb
+**Purpose:** Demonstrates evaluating RAG pipelines and agent workflows using RAGAS, producing objective metrics like faithfulness and context recall.
+**Tools/Libraries:** RAGAS, LangGraph conversion utilities, evaluation dataset harness, optional judge model
+**Topics:** constructing EvaluationDataset, metrics (LLMContextRecall, Faithfulness, FactualCorrectness), converting traces to RAGAS format, logging results.
+
+---
+
+## L4_demo_10_security_deployment.ipynb
+**Purpose:** Covers security best practices for AI agent deployments: access control, prompt injection defenses, encryption, and incident response planning.
+**Tools/Libraries:** examples with RBAC concepts, input sanitization snippets, monitoring hooks
+**Topics:** data leakage mitigation, prompt input validation, RBAC & MFA recommendations, logging and incident response, balancing security and performance.
+
+---
+
+## L4 Knowledge Additions (User-provided summaries)
+
+### Persisting Memory with a Database in LangGraph
+**Summary:** Demonstrates saving conversation history to SQLite to persist session memory across restarts. Introduces a `run_graph` helper that invokes a `StateGraph` with a `thread_id` and shows two checkpointer configurations: `MemorySaver` (in-memory) and `SqliteSaver` (SQLite-backed). Explains inspecting `memory.db`, schema (`checkpoints`, `writes`), and retrieving serialized metadata (HumanMessage, AIMessage, model configs). Highlights benefits: resumable sessions, auditing, and searchability.
+
+**Key steps:**
+- `run_graph(query, graph, thread_id)` helper to invoke workflows.
+- In-memory workflow using `MemorySaver` for ephemeral checkpoints.
+- SQLite-persisted workflow using `SqliteSaver(db_path='memory.db')` for durable checkpoints.
+- Inspect DB schema and `metadata` for step-by-step snapshots.
+
+---
+
+### RAG Pipelines: Enhancing Agents with Retrieval + Generation
+**Summary:** Explains the RAG pattern: retrieval (embed query → vector DB search), augmentation (add retrieved docs to prompt), and generation (LLM answers using augmented context). Uses an e-commerce support example to show the difference between non-RAG and RAG responses, and covers preprocessing steps (collection, cleaning, chunking, embed, store).
+
+**Notes:**
+- Emphasizes chunking, metadata tagging, storage in vector DB (Chroma), and provider choices for embeddings.
+- Discusses tradeoffs vs fine-tuning and recommends a combined approach: quick RAG prototyping, then selective fine-tuning for stable improvements.
+
+---
+
+### Embeddings in LangGraph Workflows
+**Summary:** Introduces an `EmbeddingsFactory` to switch between Hugging Face and OpenAI embeddings. Demonstrates generating embeddings for sample sentences, computing similarities, and visualizing via PCA. Highlights provider tradeoffs (dimension, cost, and quality).
+
+**Key steps:**
+- Build embeddings with Hugging Face or OpenAI.
+- Compute pairwise similarities using dot product.
+- Use PCA for 2D visualization to inspect semantic clustering.
+
+---
+
+### Knowledge Base Agent Challenge (RAG exercise)
+**Summary:** Exercise to assemble a KB agent: document loading, splitter (RecursiveCharacterTextSplitter), embedding + vector store, retrieve → augment → generate pipeline in a LangGraph `StateGraph`. Encourages learners to add provenance, chunk optimization, and conditional routing.
+
+**Deliverables:**
+- Vectorized KB collection and Chroma/FAISS-backed retrieval.
+- Agent node that retrieves and generates grounded answers.
+- Tests for retrieval quality and provenance display.
+
+---
+
+### Agentic Decisions in RAG Pipelines
+**Summary:** Adds a decision layer that evaluates retrieved context quality and optionally triggers a live web search. Components: retriever, evaluator (LLM-based yes/no), researcher (web search tool), and routers to direct flow. Demonstrates dynamic, cost-aware control flow.
+
+---
+
+### Building Long-Term Memory with LangMem
+**Summary:** Shows how to use `LangMem` (OpenAIMemoryStore or similar) to create persistent long-term memory. Demonstrates `create_react_agent` wired to memory tools (`manage_memory`, `search_memory`) and examples of storing and retrieving user preferences across sessions.
+
+---
+
+### Ensuring Reliability: Metrics, Testing, Observability
+**Summary:** Covers reliability definitions and metrics (accuracy, efficiency, cost), differences between testing and evaluation, and observability practices (metrics, logs, tracing). Suggests continuous evaluation loops, alerting, and KPIs to keep agents reliable in production.
+
+---
+
+### Human-in-the-Loop (HITL) Approvals and Edits
+**Summary:** Demonstrates breakpoints (`interrupt_before`) and manual approval/edit flows inside LangGraph workflows. Shows how to pause execution, solicit user approval or edits, and resume with updated state, enabling supervised tool calls and safer interaction.
+
+---
+
+### Observability with MLflow and LangGraph
+**Summary:** Integrates MLflow for experiment tracking: set tracking URI, autolog LangChain events, and log node inputs/outputs and evaluation metrics. Demonstrates reviewing traces in MLflow UI and logging token usage/artifacts.
+
+---
+
+### Evaluating RAG and Agent Performance with RAGAS
+**Summary:** Demonstrates converting LangGraph traces to RAGAS format and evaluating RAG pipelines with metrics like context recall, faithfulness, and factual correctness. Shows constructing `EvaluationDataset` and logging results (optionally to MLflow).
+
+---
+
+### Security Concerns in AI Agent Deployments
+**Summary:** Discusses common threats (data leakage, prompt injection, unauthorized access) and recommends best practices: RBAC, MFA, input sanitization, logging, and incident response. Emphasizes ongoing monitoring and balancing security with usability.

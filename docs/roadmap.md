@@ -115,3 +115,42 @@ load_dotenv_if_present(dotenv_path=Path('..') / '.env')
 ```
 
 I will now commit and push this update to `docs/roadmap.md`.
+
+## Execution Log (recent changes and results)
+
+Summary of what was evaluated and why:
+- Evaluated: `playground/01_basics_overview.ipynb` and `playground/02_code_examples.ipynb` to ensure they run end-to-end in the project's local virtual environment (`.venv`).
+- Why: The `01` notebook couldn't find a `.env` when executed from inside `playground/`. This blocks running examples that conditionally enable Foundry calls.
+
+What I changed and why:
+- Updated the `.env` loader inside `playground/01_basics_overview.ipynb` to search upward up to 5 parent directories for a `.env` file (function: `find_upwards`).
+  - Reason: Notebooks are often executed with different working directories; searching upwards makes the loader robust while still keeping secrets local.
+- Added `run_notebooks.py` (temporary runner) to execute notebooks headlessly using `nbclient` and set Windows selector event-loop policy to avoid zmq Proactor issues during headless execution.
+  - Reason: `nbconvert` produced nested output path issues on Windows; `nbclient` provides a reliable programmatic runner.
+  - Note: `run_notebooks.py` is scaffolding used to validate notebooks and should be reviewed and removed later once CI or a standardized test runner is in place.
+- Updated `README.md` with the current directory tree and a short action plan (so the team has a single source of truth about structure and next steps).
+
+Results from running the notebooks in `.venv`:
+- Executed copies were produced and saved as:
+  - `playground/01_basics_overview.executed.ipynb` (success)
+  - `playground/02_code_examples.executed.ipynb` (success)
+- During execution there was a transient zmq warning/assertion logged related to the Windows Proactor event loop; this did not prevent notebook execution but we set the selector event loop policy in `run_notebooks.py` to reduce this noise.
+
+Files changed / committed as part of this iteration:
+- `playground/01_basics_overview.ipynb` — loader and memory improvements
+- `playground/02_code_examples.ipynb` — made self-contained and runnable
+- `playground/01_basics_overview.executed.ipynb` — executed artifact
+- `playground/02_code_examples.executed.ipynb` — executed artifact
+- `run_notebooks.py` — temporary runner (scaffolding)
+- `README.md` — updated directory tree and short plan
+- `docs/roadmap.md` — (this file) updated with flow diagram and the execution log
+
+Next recommended steps (short):
+- Confirm where you keep `.env` (project root recommended) and **do not commit** it. Update notebooks to call `load_dotenv_if_present()` with a specific path if you prefer a different layout.
+- Decide which focused playground notebook to create next (RAG recommended). I can draft it and make it self-contained with toggles to enable Foundry calls.
+- Plan to move `run_notebooks.py` into a small `scripts/` test harness or delete it after CI is set up.
+
+Change rationale notes (why we changed code):
+- Robustness: Searching upwards for `.env` reduces false negatives when running notebooks from nested folders.
+- Reproducibility: Executed notebook artifacts help verify examples run in the target environment and make debugging easier.
+- Traceability: Recording the execution log and reasons for change helps review and rollback if needed.

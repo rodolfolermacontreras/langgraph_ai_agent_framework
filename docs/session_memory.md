@@ -37,5 +37,52 @@ This file records the major actions, decisions, and artifacts produced during in
   - Always use the local virtual environment (`.venv`) to install packages and run scripts. Do not install packages globally.
   - Keep this `session_memory.md` updated as we change or move helper code.
 
+## Team Rules (improved)
+
+Purpose: a concise, enforceable set of rules to keep the workspace tidy, auditable, and reproducible.
+
+1. Documentation and notes
+  - Do not create new top-level documents unless explicitly requested. Prefer updating an existing file under `docs/`.
+  - Each doc update must include: what we evaluated, the results, and the explicit reason for changes (if code changed).
+  - Add a short "Plan" section at the end of any documentation update summarizing next steps and scope.
+
+2. Scripts and helper code
+  - Small helper functions may remain in notebooks while experimental. When a helper is used by more than one notebook or becomes non-trivial, move it into `scripts/` as a module.
+  - When creating a script for evaluation, add a short header comment describing purpose, inputs, outputs, and how it will be integrated or removed.
+  - Remove or archive experimental scripts after they are integrated into the codebase; record the removal in `session_memory.md`.
+
+3. Environment and packages
+  - Always use the local virtual environment (`.venv`) for installs and execution. NEVER install packages globally on developer machines.
+  - Record package installs and environment changes in `requirements.txt` or `pyproject.toml` as applicable.
+
+4. Repository hygiene
+  - Avoid committing large binary outputs or temporary artifacts. If an executed notebook or artifact is only for local verification, add it to `.gitignore` and remove it from Git history if already committed (coordinate before history rewrite).
+  - Keep the repo structure minimal and tidy. If old data or artifacts are no longer needed, remove them and note the deletion in `session_memory.md`.
+
+5. Commits and change management
+  - Commit grouped, thematic changes together with clear messages. For significant changes, include a short description of the motivation and rollback plan in the commit message.
+  - Push changes to the remote frequently for visibility; use feature branches for large or risky changes.
+
+6. Notes and style
+  - Do not use emojis in code, documentation, or commits.
+  - Use clear, descriptive names for scripts, variables, and notebooks.
+
+## Session Note Template (use for every update)
+
+Use this template when recording session updates in `docs/session_memory.md`.
+
+- Date: YYYY-MM-DD
+- Purpose: Short one-line purpose of the session
+- Actions performed: bullet list of main actions (files changed, scripts run)
+- Why: short rationale for the actions
+- Results: what succeeded, what failed, notable outputs
+- Files changed: list of files added/modified/removed
+- Next steps / Plan: what to do next (1-3 items)
+- Notes: any extra details, security notes, or coordination needed
+
+---
+
+Append future session notes to the top of this file so the most recent work is easy to find.
+
 
 

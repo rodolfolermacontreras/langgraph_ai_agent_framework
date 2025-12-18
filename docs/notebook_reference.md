@@ -277,57 +277,57 @@ This document summarizes the purpose, tools, and topics covered in each notebook
 **Purpose:** Covers security best practices for AI agent deployments: access control, prompt injection defenses, encryption, and incident response planning.
 **Tools/Libraries:** examples with RBAC concepts, input sanitization snippets, monitoring hooks
 **Topics:** data leakage mitigation, prompt input validation, RBAC & MFA recommendations, logging and incident response, balancing security and performance.
-
+**One-line Summary:** Shows how to persist conversation memory by switching a LangGraph `StateGraph` checkpointer from an in-memory `MemorySaver` to a durable `SqliteSaver`, including a `run_graph` helper for invoking graphs, inspecting `memory.db` schema (checkpoints/writes), and resuming sessions by `thread_id`.
 ---
 
 ## L4 Knowledge Additions (User-provided summaries)
 
-### Persisting Memory with a Database in LangGraph
+**One-line Summary:** Explains RAG end-to-end (embed → retrieve → augment → generate) with preprocessing guidance (cleaning, chunking, metadata) and an e-commerce example showing improved accuracy over a non-RAG model.
 **Summary:** Demonstrates saving conversation history to SQLite to persist session memory across restarts. Introduces a `run_graph` helper that invokes a `StateGraph` with a `thread_id` and shows two checkpointer configurations: `MemorySaver` (in-memory) and `SqliteSaver` (SQLite-backed). Explains inspecting `memory.db`, schema (`checkpoints`, `writes`), and retrieving serialized metadata (HumanMessage, AIMessage, model configs). Highlights benefits: resumable sessions, auditing, and searchability.
 
 **Key steps:**
 - `run_graph(query, graph, thread_id)` helper to invoke workflows.
-- In-memory workflow using `MemorySaver` for ephemeral checkpoints.
+**One-line Summary:** Demonstrates creating embeddings with a provider-agnostic `EmbeddingsFactory`, computing semantic similarity, and visualizing results with PCA to compare provider trade-offs and semantic clustering.
 - SQLite-persisted workflow using `SqliteSaver(db_path='memory.db')` for durable checkpoints.
 - Inspect DB schema and `metadata` for step-by-step snapshots.
 
 ---
-
+**One-line Summary:** Exercise that guides building a KB agent using RAG in LangGraph: load and chunk documents, vectorize into a store, implement retrieve→augment→generate nodes, and add provenance and confidence-based fallbacks.
 ### RAG Pipelines: Enhancing Agents with Retrieval + Generation
 **Summary:** Explains the RAG pattern: retrieval (embed query → vector DB search), augmentation (add retrieved docs to prompt), and generation (LLM answers using augmented context). Uses an e-commerce support example to show the difference between non-RAG and RAG responses, and covers preprocessing steps (collection, cleaning, chunking, embed, store).
 
 **Notes:**
-- Emphasizes chunking, metadata tagging, storage in vector DB (Chroma), and provider choices for embeddings.
+**One-line Summary:** Adds an evaluator node that decides whether retrieval suffices or a live web search is needed, routing the workflow dynamically to balance accuracy and cost.
 - Discusses tradeoffs vs fine-tuning and recommends a combined approach: quick RAG prototyping, then selective fine-tuning for stable improvements.
 
 ---
 
-### Embeddings in LangGraph Workflows
+**One-line Summary:** Shows integrating `LangMem` stores into ReAct agents so memories (preferences, facts) are saved and searchable across sessions via `manage_memory` and `search_memory` tools.
 **Summary:** Introduces an `EmbeddingsFactory` to switch between Hugging Face and OpenAI embeddings. Demonstrates generating embeddings for sample sentences, computing similarities, and visualizing via PCA. Highlights provider tradeoffs (dimension, cost, and quality).
 
 **Key steps:**
 - Build embeddings with Hugging Face or OpenAI.
-- Compute pairwise similarities using dot product.
+**One-line Summary:** Introduces reliability fundamentals—KPIs, evaluation vs testing, logging, tracing, and alerting—to make agent behavior measurable and maintainable in production.
 - Use PCA for 2D visualization to inspect semantic clustering.
 
 ---
 
-### Knowledge Base Agent Challenge (RAG exercise)
+**One-line Summary:** Demonstrates breakpoints and human approval/edit flows in LangGraph, enabling manual review and edits before risky actions like external tool calls.
 **Summary:** Exercise to assemble a KB agent: document loading, splitter (RecursiveCharacterTextSplitter), embedding + vector store, retrieve → augment → generate pipeline in a LangGraph `StateGraph`. Encourages learners to add provenance, chunk optimization, and conditional routing.
 
 **Deliverables:**
 - Vectorized KB collection and Chroma/FAISS-backed retrieval.
-- Agent node that retrieves and generates grounded answers.
+**One-line Summary:** Shows how to instrument LangGraph workflows with MLflow to record runs, parameters, node inputs/outputs, and evaluation artifacts for reproducible experiments.
 - Tests for retrieval quality and provenance display.
 
 ---
 
-### Agentic Decisions in RAG Pipelines
+**One-line Summary:** Demonstrates converting LangGraph traces to RAGAS format and running automated evaluations (faithfulness, context recall, factual correctness) on RAG/agent pipelines.
 **Summary:** Adds a decision layer that evaluates retrieved context quality and optionally triggers a live web search. Components: retriever, evaluator (LLM-based yes/no), researcher (web search tool), and routers to direct flow. Demonstrates dynamic, cost-aware control flow.
 
 ---
 
-### Building Long-Term Memory with LangMem
+**One-line Summary:** Summarizes AI security best practices: RBAC, input sanitization, prompt injection defenses, encryption, monitoring, and incident response planning for safe deployments.
 **Summary:** Shows how to use `LangMem` (OpenAIMemoryStore or similar) to create persistent long-term memory. Demonstrates `create_react_agent` wired to memory tools (`manage_memory`, `search_memory`) and examples of storing and retrieving user preferences across sessions.
 
 ---

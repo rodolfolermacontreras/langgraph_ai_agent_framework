@@ -37,6 +37,16 @@ This file records the major actions, decisions, and artifacts produced during in
   - Always use the local virtual environment (`.venv`) to install packages and run scripts. Do not install packages globally.
   - Keep this `session_memory.md` updated as we change or move helper code.
 
+  ## 2025-12-17 (cleanup): untrack executed notebook artifacts
+
+  - Action: Added `*.executed.ipynb` and `playground/*.executed.ipynb` to `.gitignore` and removed the two executed artifacts from Git tracking (kept local copies).
+  - Reason: prevent committed executed notebooks from polluting the repository and causing diff noise while preserving local verification artifacts.
+  - Files affected:
+    - `.gitignore` (updated)
+    - Removed from index: `playground/01_basics_overview.executed.ipynb`, `playground/02_code_examples.executed.ipynb` (local files retained)
+
+  Next steps: If you want executed artifacts removed from git history as well, I can prepare a history-rewrite plan (uses `git filter-repo` or BFG) but this requires force-push and coordination with other collaborators.
+
 ## Team Rules (improved)
 
 Purpose: a concise, enforceable set of rules to keep the workspace tidy, auditable, and reproducible.

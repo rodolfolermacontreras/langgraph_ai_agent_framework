@@ -60,6 +60,10 @@ venv.bak/
 .env
 .env.*
 
+# Executed notebook artifacts (created by headless runs)
+*.executed.ipynb
+playground/*.executed.ipynb
+
 # Logs
 logs/
 *.log

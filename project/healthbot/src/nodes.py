@@ -210,25 +210,36 @@ HEALTH INFORMATION SUMMARY
 
 def generate_quiz(state: State) -> State:
     """
-    NODE 5: Generate a single comprehension check question
+    NODE 5: Generate a comprehension check question
     
     Input:
     - summary: Patient-friendly summary to base question on
     - health_topic: The health topic
+    - quiz_count: Number of quizzes already done on this topic
     
     Output:
-    - quiz_question: Generated quiz question
+    - quiz_question: Generated quiz question (different from previous)
+    - quiz_count: Incremented by 1
     - messages: Updated with quiz intro
+    
+    Stand-out Feature: Generates different questions for multiple quizzes on same topic
     """
     
     summary = state.get("summary", "")
     topic = state.get("health_topic", "")
+    quiz_count = state.get("quiz_count", 0)
+    quiz_count += 1
     
     if not summary:
         raise ValueError("No summary available for quiz generation")
     
     # Initialize LLM
     llm = initialize_llm()
+    
+    # Create quiz prompt (request different question if this is a repeat quiz)
+    additional_instruction = ""
+    if quiz_count > 1:
+        additional_instruction = f"\n\nNote: This is quiz question #{quiz_count} on this topic. Please generate a DIFFERENT question that tests a different aspect or concept from the summary than previous questions."
     
     # Create quiz prompt
     quiz_prompt = f"""
@@ -245,7 +256,7 @@ The question should:
 1. Be clear and simple (8th grade reading level)
 2. Test understanding, not memorization
 3. Be answerable based on the summary
-4. Be relevant to patient education
+4. Be relevant to patient education{additional_instruction}
 
 Format your response as ONLY the question (no numbering, no answer choices unless 
 you're doing multiple choice). If you create multiple choice, include options A, B, C, D.
@@ -257,7 +268,10 @@ Quiz Question:
         response = llm.invoke(quiz_prompt)
         quiz_question = response.content.strip()
         state["quiz_question"] = quiz_question
-        state["messages"].append(AIMessage(content=quiz_question))
+        state["quiz_count"] = quiz_count
+        
+        question_label = f"(Question {quiz_count})" if quiz_count > 1 else ""
+        state["messages"].append(AIMessage(content=f"Quiz {question_label}: {quiz_question}"))
     except Exception as e:
         error_msg = f"Error generating quiz question: {str(e)}"
         display_text_to_user(error_msg)
@@ -276,6 +290,7 @@ def present_quiz(state: State) -> State:
     
     Input:
     - quiz_question: The quiz question to ask
+    - quiz_count: Which question number this is
     
     Output:
     - patient_answer: Patient's response
@@ -283,13 +298,14 @@ def present_quiz(state: State) -> State:
     """
     
     quiz_question = state.get("quiz_question", "")
+    quiz_count = state.get("quiz_count", 1)
     
     if not quiz_question:
         raise ValueError("No quiz question available")
     
     display = f"""
 {separator('=', 80)}
-COMPREHENSION CHECK QUIZ
+COMPREHENSION CHECK QUIZ - Question {quiz_count}
 {separator('=', 80)}
 
 {quiz_question}
@@ -419,15 +435,17 @@ EXPLANATION: Good understanding! You correctly identified [concept]. The summary
 
 def ask_continue(state: State) -> State:
     """
-    NODE 8: Present grade/feedback and ask if patient wants another topic
+    NODE 8: Present grade/feedback and ask what patient wants to do next
     
     Input:
     - grade: Patient's grade
     - feedback: Explanation of grade
     
     Output:
-    - should_continue: True (new topic) or False (exit)
+    - should_continue: 'new_topic' (new health topic), 'more_questions' (more quiz on same topic), or 'exit'
     - messages: Updated with continuation prompt
+    
+    Supports stand-out feature: Allow multiple quiz questions per topic
     """
     
     grade = state.get("grade", 0)
@@ -447,24 +465,47 @@ Grade: {grade}/100
     
     display_text_to_user(display)
     
-    # Ask if they want to continue
-    prompt = "Would you like to learn about another health topic? (yes/no): "
-    response = ask_user_for_input(prompt).lower()
+    # Ask what patient wants to do next
+    prompt = """
+What would you like to do next?
+  (1) Another quiz question on this topic
+  (2) Learn about a new health topic
+  (3) Exit the session
+  
+Enter your choice (1, 2, or 3): """
     
-    while response not in ['yes', 'no', 'y', 'n']:
-        display_text_to_user("Please enter 'yes' or 'no'")
-        response = ask_user_for_input(prompt).lower()
+    response = ask_user_for_input(prompt).lower().strip()
     
-    should_continue = response in ['yes', 'y']
-    state["should_continue"] = should_continue
+    valid_responses = {
+        '1': 'more_questions',
+        '2': 'new_topic',
+        '3': 'exit',
+        'more_questions': 'more_questions',
+        'new_topic': 'new_topic',
+        'exit': 'exit',
+    }
     
-    if should_continue:
+    while response not in valid_responses:
+        display_text_to_user("Please enter '1', '2', or '3'")
+        response = ask_user_for_input(prompt).lower().strip()
+    
+    choice = valid_responses[response]
+    state["should_continue"] = choice
+    
+    if choice == 'more_questions':
+        state["messages"].append(
+            HumanMessage(content="I'd like another quiz question on this topic")
+        )
+        state["messages"].append(
+            AIMessage(content="Great! Let me create another quiz question about this topic...")
+        )
+    elif choice == 'new_topic':
         state["messages"].append(
             HumanMessage(content="I'd like to learn about another topic")
         )
         # Reset state for new topic but keep session continuity
         state = reset_for_new_topic(state)
-    else:
+    else:  # exit
         state["messages"].append(
             HumanMessage(content="I'm done learning. Thank you!")
         )

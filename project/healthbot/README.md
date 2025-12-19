@@ -17,12 +17,13 @@ HealthBot is an intelligent patient education chatbot built with LangGraph that 
 - Automated quiz generation and grading
 - Session management with state reset for privacy
 - Azure Foundry LLM integration
+- **Stand-Out Feature**: Multiple quiz questions per topic without restarting the conversation
 
 ---
 
 ## Workflow Architecture
 
-The HealthBot follows a structured 8-node LangGraph workflow:
+The HealthBot follows a structured 8-node LangGraph workflow with conditional routing to support multiple quiz questions per topic (stand-out feature):
 
 ```
 START
@@ -49,10 +50,14 @@ START
 [7] Evaluate Answer (grade + feedback)
   |
   v
-[8] Ask Continue (session management)
+[8] Ask Continue
   |
-  +---> [Continue: back to node 1] OR [Exit: END]
+  +---> "more_questions" --> back to [5] (different question, same topic)
+  |---> "new_topic" --> back to [1] (reset state, new topic)
+  +---> "exit" --> END
 ```
+
+**Stand-Out Feature**: The "more_questions" path generates fresh quiz questions on the same topic, maintaining the summary context while testing deeper understanding.
 
 ### Node Descriptions
 
@@ -191,7 +196,7 @@ Then execute all cells in order. The notebook will:
 
 ## Usage Example
 
-**Typical HealthBot Conversation**:
+**Typical HealthBot Conversation with Stand-Out Feature** (Multiple Questions):
 
 ```
 HealthBot: "Welcome to HealthBot! What health topic would you like to learn about?"
@@ -204,7 +209,8 @@ HealthBot: [Displays patient-friendly summary about diabetes, symptoms, treatmen
 HealthBot: "Have you finished reading? Type 'ready' to proceed to comprehension check"
 Patient:  "ready"
 
-HealthBot: "Which of the following is a symptom of type 2 diabetes?
+HealthBot: "COMPREHENSION CHECK QUIZ - Question 1
+           Which of the following is a symptom of type 2 diabetes?
            A) Increased thirst
            B) Weight gain
            C) Frequent urination
@@ -215,11 +221,47 @@ HealthBot: "Grade: 95/100
            Excellent! You correctly identified multiple symptoms. The summary notes that 
            'increased thirst, weight gain, and frequent urination' are common symptoms..."
 
-HealthBot: "Would you like to learn about another health topic? (yes/no)"
-Patient:  "no"
+HealthBot: "What would you like to do next?
+           (1) Another quiz question on this topic
+           (2) Learn about a new health topic
+           (3) Exit the session
+           
+           Enter your choice (1, 2, or 3):"
+Patient:  "1"
 
-HealthBot: "Thank you for using HealthBot! Stay informed, stay healthy."
+HealthBot: "Great! Let me create another quiz question about this topic..."
+
+HealthBot: "COMPREHENSION CHECK QUIZ - Question 2
+           What is the primary cause of type 2 diabetes?
+           A) Pancreas produces no insulin
+           B) Body cannot use insulin effectively
+           C) Viral infection
+           D) Lack of exercise alone"
+Patient:  "B"
+
+HealthBot: "Grade: 100/100
+           Perfect! Type 2 diabetes is characterized by insulin resistance, where the body 
+           produces insulin but cannot use it effectively. This is different from type 1, 
+           where the pancreas doesn't produce insulin..."
+
+HealthBot: "What would you like to do next?
+           (1) Another quiz question on this topic
+           (2) Learn about a new health topic
+           (3) Exit the session"
+Patient:  "2"
+
+HealthBot: [State resets, returns to topic selection]
+HealthBot: "What health topic would you like to learn about?"
+Patient:  "hypertension"
+
+[Workflow continues with new topic...]
 ```
+
+**Key Feature Highlights**:
+- Question 1 vs Question 2 are different but both from same summary
+- Same topic context maintained across multiple questions
+- Patient can switch topics anytime or exit
+- State resets cleanly when starting new topic
 
 ---
 
@@ -266,15 +308,25 @@ See `02_testing.ipynb` for:
 
 ---
 
+## Stand-Out Features Implemented
+
+**Multiple Quiz Questions Per Topic** (IMPLEMENTED):
+- Patients can request additional quiz questions on the same topic without restarting
+- Each question is generated fresh and tests different aspects of the summary
+- Maintains conversation continuity and topic context
+- Increases educational value by allowing deeper knowledge verification
+
+---
+
 ## Future Enhancements
 
-1. **Multi-topic Sessions**: Track learning across multiple topics
-2. **Progress Tracking**: Store user progress and learning history
-3. **Personalization**: Adapt difficulty based on user performance
-4. **Knowledge Base**: Integrate with curated medical knowledge base
-5. **Accessibility**: Text-to-speech and speech-to-text support
-6. **Analytics**: Track common questions and knowledge gaps
-7. **Feedback Loop**: Patient ratings to improve summaries/quizzes
+1. **Difficulty Settings**: Adapt summary length and question complexity based on user preference
+2. **Related Subjects**: Suggest related topics at end of session (e.g., "Learn about complications of diabetes next?")
+3. **Progress Tracking**: Store learning history across sessions
+4. **Personalization**: Adjust pacing and difficulty based on user performance
+5. **Knowledge Base**: Integrate curated medical knowledge base for consistency
+6. **Accessibility**: Text-to-speech and speech-to-text support
+7. **Analytics**: Track common questions and knowledge gaps
 8. **Multi-language**: Support for non-English languages
 
 ---

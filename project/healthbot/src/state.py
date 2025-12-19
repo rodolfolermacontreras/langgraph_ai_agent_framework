@@ -21,8 +21,9 @@ class State(MessagesState):
     - patient_answer: Patient's answer to quiz question
     - grade: Numeric grade for answer (0-100)
     - feedback: Detailed feedback with citations
-    - should_continue: Whether patient wants to learn another topic
+    - should_continue: Patient's choice ('new_topic', 'more_questions', 'exit')
     - session_id: Unique session identifier
+    - quiz_count: Number of quizzes taken on current topic (for stand-out feature)
     """
     
     health_topic: Optional[str] = None
@@ -32,8 +33,9 @@ class State(MessagesState):
     patient_answer: Optional[str] = None
     grade: Optional[int] = None
     feedback: Optional[str] = None
-    should_continue: Optional[bool] = None
+    should_continue: Optional[str] = None  # Changed from bool to str
     session_id: Optional[str] = None
+    quiz_count: Optional[int] = 0  # Added for stand-out feature
 
 def reset_for_new_topic(state: State) -> State:
     """
@@ -56,5 +58,6 @@ def reset_for_new_topic(state: State) -> State:
     state["grade"] = None
     state["feedback"] = None
     state["should_continue"] = None
+    state["quiz_count"] = 0  # Reset quiz counter for new topic
     
     return state

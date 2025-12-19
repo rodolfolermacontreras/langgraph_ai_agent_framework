@@ -56,12 +56,32 @@ def create_healthbot_workflow():
     workflow.add_edge("present_quiz", "evaluate_answer")
     workflow.add_edge("evaluate_answer", "ask_continue")
     
-    # Conditional edge: continue or exit
-    def should_continue(state):
-        """Route based on whether patient wants to learn another topic"""
-        return "ask_for_topic" if state.get("should_continue") else "end"
+    # Conditional edge: route based on patient's choice
+    def route_user_choice(state):
+        """
+        Route based on patient's choice after seeing grade:
+        - 'more_questions': Generate another quiz on same topic
+        - 'new_topic': Start fresh with new health topic
+        - 'exit': End the session
+        """
+        choice = state.get("should_continue", "exit")
+        
+        if choice == "more_questions":
+            return "generate_quiz"  # Go back to generate another question
+        elif choice == "new_topic":
+            return "ask_for_topic"  # Start fresh
+        else:  # exit
+            return "end"
     
-    workflow.add_conditional_edges("ask_continue", should_continue, {"ask_for_topic": "ask_for_topic", "end": END})
+    workflow.add_conditional_edges(
+        "ask_continue",
+        route_user_choice,
+        {
+            "generate_quiz": "generate_quiz",
+            "ask_for_topic": "ask_for_topic",
+            "end": END
+        }
+    )
     
     # Compile with memory checkpointer
     memory = MemorySaver()
@@ -105,4 +125,5 @@ def initialize_empty_state():
         "feedback": None,
         "should_continue": None,
         "session_id": None,
+        "quiz_count": 0,
     }

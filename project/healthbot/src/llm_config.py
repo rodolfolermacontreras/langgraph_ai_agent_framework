@@ -10,13 +10,12 @@ from langchain_openai import ChatOpenAI
 # Load environment variables from root .env
 # (The notebook will be in project/healthbot/notebooks/, so we go up 3 levels)
 def load_env_from_root():
-    """Load .env from workspace root (3 levels up from this file)"""
+    """Load .env from project root (2 levels up from this file)"""
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    project_dir = os.path.dirname(os.path.dirname(current_dir))  # healthbot/
-    workspace_dir = os.path.dirname(project_dir)  # project/
-    root_dir = os.path.dirname(workspace_dir)  # AI_Agents_LangGraph/
+    healthbot_dir = os.path.dirname(current_dir)  # healthbot/
+    project_dir = os.path.dirname(healthbot_dir)  # project/
     
-    env_path = os.path.join(root_dir, ".env")
+    env_path = os.path.join(project_dir, ".env")
     if os.path.exists(env_path):
         load_dotenv(env_path)
         return True
@@ -47,6 +46,25 @@ def initialize_llm():
             "Missing Azure Foundry credentials. "
             "Ensure .env contains FOUNDRY_PROJECT_ENDPOINT, "
             "FOUNDRY_API_KEY, and FOUNDRY_DEPLOYMENT_NAME"
+        )
+    
+    # Try OpenAI first (if available), fallback to Azure Foundry
+    openai_key = os.getenv("OPENAI_API_KEY")
+    
+    if openai_key:
+        # Use OpenAI ChatGPT
+        llm = ChatOpenAI(
+            api_key=openai_key,
+            model="gpt-3.5-turbo",
+            temperature=0.7,
+        )
+        return llm
+    
+    # Fallback to Azure Foundry
+    if not all([api_base, api_key, deployment_name]):
+        raise EnvironmentError(
+            "Missing credentials. Need either OPENAI_API_KEY or "
+            "(FOUNDRY_PROJECT_ENDPOINT + FOUNDRY_API_KEY + FOUNDRY_DEPLOYMENT_NAME)"
         )
     
     # Initialize ChatOpenAI with Azure Foundry endpoint

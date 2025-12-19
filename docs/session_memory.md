@@ -2,6 +2,119 @@
 
 This file records the major actions, decisions, and artifacts produced during interactive work sessions. Use this as a living document to capture "why" we changed things, where helper code lives, and which artifacts should be moved into `scripts/` or removed.
 
+## 2025-12-19: HealthBot Project - Phase 1 Setup and Configuration Complete
+
+**Course Project**: HealthBot: AI-Powered Patient Education System (Udacity - AI Agents with LangChain and LangGraph)
+
+- Purpose: Create complete project structure and foundational code for HealthBot, an LLM-powered patient education chatbot using LangGraph workflow orchestration.
+
+- Actions performed:
+
+  **Project Structure**:
+  - Created `project/healthbot/` with 6 subdirectories (src, notebooks, config, tests, reports)
+  - Organized modules by responsibility for maintainability and testing
+
+  **Core Implementation** (Phase 1 Complete):
+  - `src/llm_config.py`: Azure Foundry LLM initialization (uses workspace .env at root)
+  - `src/tools.py`: Tavily search integration for medical information retrieval
+  - `src/state.py`: LangGraph State schema with 10 fields for complete workflow tracking
+  - `src/nodes.py`: Complete implementation of all 8 workflow nodes (450+ lines with docstrings)
+  - `src/workflow.py`: LangGraph workflow orchestration combining all nodes with checkpointing
+  - `src/utils.py`: Helper functions for display, input validation, and formatting
+
+  **Configuration**:
+  - `config/env.example`: Template showing required environment variables (no secrets)
+  - `config/settings.yaml`: Project constants (Tavily settings, LLM params, reading level, etc.)
+
+  **Documentation**:
+  - `project/healthbot/README.md`: Comprehensive guide with architecture, setup, usage examples
+  - `project/IMPLEMENTATION_PLAN.md`: Detailed 7-phase plan (updated for practical report approach)
+
+  **Notebooks**:
+  - `notebooks/01_healthbot_main.ipynb`: Main execution notebook with full workflow
+
+- Files created this session:
+  - `project/healthbot/src/llm_config.py`
+  - `project/healthbot/src/tools.py`
+  - `project/healthbot/src/state.py`
+  - `project/healthbot/src/nodes.py` (8 nodes: ask_for_topic, search_medical_info, summarize_results, present_summary, generate_quiz, present_quiz, evaluate_answer, ask_continue)
+  - `project/healthbot/src/workflow.py`
+  - `project/healthbot/src/utils.py`
+  - `project/healthbot/config/env.example`
+  - `project/healthbot/config/settings.yaml`
+  - `project/healthbot/README.md`
+  - `project/healthbot/notebooks/01_healthbot_main.ipynb`
+  - `project/IMPLEMENTATION_PLAN.md`
+
+- Key design decisions and rationale:
+
+  **API Key Management**:
+  - Uses existing workspace `.env` (root level) for Azure Foundry AND Tavily API keys
+  - No duplication of credentials
+  - Eliminates risk of accidental secret commits
+  - All code loads from root .env, not local copies
+
+  **8-Node Architecture**:
+  - Linear progression with conditional routing at end (continue new topic or exit)
+  - Each node independently testable
+  - Clear separation of concerns (ask, search, summarize, present, quiz, evaluate, continue)
+  - State reset between topics maintains patient privacy
+
+  **LLM Configuration**:
+  - Azure Foundry (gpt-4.1) - already configured in workspace
+  - NOT OpenAI - uses existing credentials
+  - ChatOpenAI-compatible interface (same as OpenAI but different endpoint)
+
+  **Patient-Friendly Approach**:
+  - LLM enforces 8th grade reading level
+  - Tavily sources medical information from reputable sources
+  - Quiz questions test understanding, not memorization
+  - Grading includes citations to build trust
+
+  **Modular Python Structure**:
+  - `llm_config.py`: Handles all LLM initialization (easier to swap models later)
+  - `tools.py`: Tavily integration (easy to add other search tools)
+  - `state.py`: State schema (easy to add new fields)
+  - `nodes.py`: All workflow logic (easy to test, modify individual nodes)
+  - `workflow.py`: Graph orchestration (easy to change node order or routing)
+  - `utils.py`: Reusable helpers (easy to test, extend)
+
+  **Error Handling**:
+  - Validation at each input point (topic length, non-empty responses)
+  - Graceful failures with helpful error messages
+  - LLM response parsing with fallbacks
+
+  **Report Strategy** (Updated):
+  - Changed from 20-30 page academic report to 8-12 page practical report
+  - Focuses on understanding and completeness over length
+  - Includes real examples, test results, screenshots
+  - Emphasizes what was built and why
+
+- Decisions about secrets and security:
+  - NO hardcoded API keys anywhere in code
+  - NO duplicate .env files (uses workspace root only)
+  - `env.example` shows structure without secrets
+  - All imports load from root .env
+  - Notebook verifies all keys present before execution
+
+- Remaining phases (not yet started):
+
+  Phase 2: Workflow architecture finalization (minimal - already done in code)
+  Phase 3: Node implementation (complete - ready to test)
+  Phase 4: Integration & testing (next - run notebook, validate all nodes)
+  Phase 5: Evaluation against requirements
+  Phase 6: Generate practical report (8-12 pages with test results)
+  Phase 7: Cleanup and final commit
+
+- Big picture plan:
+  - TODAY (2025-12-19): Complete Phase 1 (DONE) + Phase 4 (test in notebook)
+  - Validate all 8 nodes work correctly
+  - Run end-to-end conversation test (3+ different health topics)
+  - Verify state reset and session management
+  - Document test results
+  - Generate practical report with results and learnings
+  - Final commit with all work
+
 ## 2025-12-19: Updated README with professional text-only format
 
 - Purpose: Update README to reflect current playground notebook enhancements and fix formatting corruption.

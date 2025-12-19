@@ -1,0 +1,35 @@
+# HealthBot Project Settings and Constants
+
+# Workflow Configuration
+HEALTH_TOPIC_MAX_LENGTH = 500
+HEALTH_TOPIC_MIN_LENGTH = 3
+
+# Tavily Search Settings
+TAVILY_MAX_RESULTS = 5
+TAVILY_SEARCH_QUERY_TEMPLATE = "{topic} patient education medical information"
+
+# LLM Configuration
+LLM_TEMPERATURE = 0.7  # Slightly higher for more natural language
+LLM_MAX_TOKENS = 2000
+SUMMARIZATION_MAX_LENGTH = 500  # Words in patient-friendly summary
+
+# Quiz Generation Settings
+QUIZ_MAX_TOKENS = 1000
+EXPECTED_ANSWER_MAX_LENGTH = 500
+
+# Grading Configuration
+GRADING_SCALE = 100  # 0-100 scale
+PASSING_GRADE = 70
+
+# Reading Level
+TARGET_READING_LEVEL = "8th grade (8-12 year old)"
+READABILITY_INSTRUCTIONS = "Use simple language, avoid medical jargon where possible, explain terms when necessary"
+
+# Session Management
+SESSION_RESET_ENABLED = True
+THREAD_ID_PREFIX = "healthbot_session_"
+RECURSION_LIMIT = 2000
+
+# UI/UX Settings
+DISPLAY_DELAY = 1  # Seconds to wait for text rendering before asking for input
+CITATION_FORMAT = "Source: {source}"

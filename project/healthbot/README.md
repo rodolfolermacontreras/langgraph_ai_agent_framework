@@ -1,23 +1,33 @@
-# HealthBot: AI-Powered Patient Education System
+# HealthBot: AI-Powered Medical Education Agent
 
+**Project**: HealthBot - Interactive AI Agent for Medical Learning  
 **Course**: AI Agents with LangChain and LangGraph (Udacity)  
-**Student**: Rodolfo Lerma  
-**Date**: December 19, 2025
+**Author**: Rodolfo Lerma  
+**Date**: December 2025
 
 ---
 
 ## Project Overview
 
-HealthBot is an intelligent patient education chatbot built with LangGraph that guides patients through learning about health topics and medical conditions. The system uses web search (Tavily), LLM-powered summarization, and comprehension quizzes to create an engaging, educational experience.
+HealthBot is an **intelligent AI agent** built with LangGraph that guides patients through interactive medical education sessions. The system demonstrates advanced agent capabilities including multi-stage reasoning, tool integration, conditional routing, and state management. It uses real-time web search (Tavily API), LLM-powered summarization, and dynamic quiz generation to create engaging, personalized learning experiences.
 
-**Key Features**:
-- Natural conversation flow with 8 workflow nodes
-- Real-time medical information retrieval via Tavily
-- Patient-friendly summaries (8th grade reading level)
-- Automated quiz generation and grading
-- Session management with state reset for privacy
-- Azure Foundry LLM integration
-- **Stand-Out Feature**: Multiple quiz questions per topic without restarting the conversation
+### Key Features
+
+- **🤖 AI Agent Pattern**: Full implementation of LangGraph StateGraph with 6 interconnected nodes
+- **📊 Real-Time Information Retrieval**: Tavily API integration for credible medical sources
+- **📝 Intelligent Summarization**: Converts medical information to 8th-grade reading level
+- **🎯 Dynamic Quiz Generation**: Creates unique questions each time (not pre-baked)
+- **✅ Adaptive Grading**: Evaluates answers with detailed feedback and learning points
+- **🔄 Conditional Routing**: Multi-way decision logic based on user interaction
+- **💾 State Management**: Maintains conversation context across multiple turns
+- **🏥 Medical Domain Focus**: Specialized for health education use cases
+
+### Stand-Out Feature: Dynamic Question Generation
+
+Unlike traditional quiz systems with static questions, HealthBot generates **entirely new questions for each quiz attempt** on the same topic. This enables:
+- **Deeper Learning**: Multiple perspectives on complex medical topics
+- **Better Retention**: Active recall without memorization
+- **Adaptive Assessment**: Continuous skill evaluation with varied questions
 
 ---
 

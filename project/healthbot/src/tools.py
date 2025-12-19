@@ -5,7 +5,6 @@ Tavily search integration for medical information retrieval
 
 import os
 from dotenv import load_dotenv
-from langchain.agents import Tool
 from tavily import TavilyClient
 
 def load_env_from_root():
@@ -19,32 +18,28 @@ def load_env_from_root():
         return True
     return False
 
-def initialize_tavily_search():
-    """
-    Initialize Tavily search tool with API key from .env
+# Global client instance
+_tavily_client = None
+
+def get_tavily_client():
+    """Get or initialize Tavily client"""
+    global _tavily_client
     
-    Returns:
-        Tavily search tool
+    if _tavily_client is None:
+        # Load from root .env
+        load_env_from_root()
         
-    Raises:
-        EnvironmentError if TAVILY_API_KEY not found
-    """
+        tavily_api_key = os.getenv("TAVILY_API_KEY")
+        
+        if not tavily_api_key:
+            raise EnvironmentError(
+                "TAVILY_API_KEY not found. "
+                "Add it to project/.env file (first 1000 requests free at https://app.tavily.com)"
+            )
+        
+        _tavily_client = TavilyClient(api_key=tavily_api_key)
     
-    # Load from root .env
-    load_env_from_root()
-    
-    tavily_api_key = os.getenv("TAVILY_API_KEY")
-    
-    if not tavily_api_key:
-        raise EnvironmentError(
-            "TAVILY_API_KEY not found. "
-            "Add it to root .env file (first 1000 requests free at https://app.tavily.com)"
-        )
-    
-    # Initialize Tavily client directly
-    client = TavilyClient(api_key=tavily_api_key)
-    
-    return client
+    return _tavily_client
 
 def search_medical_information(topic: str, max_results: int = 5) -> str:
     """
@@ -62,7 +57,7 @@ def search_medical_information(topic: str, max_results: int = 5) -> str:
     """
     
     try:
-        client = initialize_tavily_search()
+        client = get_tavily_client()
     except EnvironmentError as e:
         raise e
     

@@ -9,14 +9,24 @@ from tavily import TavilyClient
 
 def load_env_from_project_root():
     """Load .env from project root"""
-    current_file_dir = os.path.dirname(os.path.abspath(__file__))
-    # From src/ go up 2 levels to project/
-    project_root = os.path.dirname(os.path.dirname(current_file_dir))
-    env_path = os.path.join(project_root, ".env")
-    
-    if os.path.exists(env_path):
-        load_dotenv(env_path)
-        return True
+    try:
+        current_file_dir = os.path.dirname(os.path.abspath(__file__))
+        # From src/ go up 2 levels to project/
+        project_root = os.path.dirname(os.path.dirname(current_file_dir))
+        env_path = os.path.join(project_root, ".env")
+        
+        if os.path.exists(env_path):
+            load_dotenv(env_path)
+            return True
+    except:
+        # If file resolution fails (e.g., in Jupyter), try absolute path
+        try:
+            env_path = r"c:\Training\Udacity\AI_Agents_LangGraph\project\.env"
+            if os.path.exists(env_path):
+                load_dotenv(env_path)
+                return True
+        except:
+            pass
     return False
 
 def search_medical_information(topic: str, max_results: int = 5) -> str:
@@ -30,8 +40,9 @@ def search_medical_information(topic: str, max_results: int = 5) -> str:
     Returns:
         Formatted search results as string
     """
-    # Load environment
-    load_env_from_project_root()
+    # Load environment (skip if already loaded)
+    if not os.getenv('ENV_ALREADY_LOADED'):
+        load_env_from_project_root()
     
     api_key = os.getenv("TAVILY_API_KEY")
     if not api_key:

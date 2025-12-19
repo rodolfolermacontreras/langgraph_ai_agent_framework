@@ -7,8 +7,8 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.runnables import RunnableConfig
 
-from src.state import State
-from src.nodes import (
+from state import State
+from nodes import (
     ask_for_topic,
     search_medical_info,
     summarize_results,

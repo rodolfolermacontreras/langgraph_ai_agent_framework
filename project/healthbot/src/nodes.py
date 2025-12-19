@@ -4,16 +4,16 @@ HealthBot Workflow Nodes
 """
 
 from langchain_core.messages import AIMessage, HumanMessage
-from src.state import State, reset_for_new_topic
-from src.utils import (
+from state import State, reset_for_new_topic
+from utils import (
     display_text_to_user,
     ask_user_for_input,
     validate_non_empty_input,
     validate_topic_length,
     separator,
 )
-from src.tools import search_medical_information
-from src.llm_config import initialize_llm
+from tools import search_medical_information
+from llm_config import initialize_llm
 
 
 # ============================================================================

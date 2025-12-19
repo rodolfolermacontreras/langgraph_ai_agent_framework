@@ -5,7 +5,8 @@ Tavily search integration for medical information retrieval
 
 import os
 from dotenv import load_dotenv
-from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain.agents import Tool
+from tavily import TavilyClient
 
 def load_env_from_root():
     """Load .env from workspace root"""
@@ -23,7 +24,7 @@ def initialize_tavily_search():
     Initialize Tavily search tool with API key from .env
     
     Returns:
-        TavilySearchResults tool
+        Tavily search tool
         
     Raises:
         EnvironmentError if TAVILY_API_KEY not found
@@ -40,13 +41,10 @@ def initialize_tavily_search():
             "Add it to root .env file (first 1000 requests free at https://app.tavily.com)"
         )
     
-    # Initialize Tavily search with API key
-    search = TavilySearchResults(
-        api_wrapper=None,  # Let it use env variable
-        max_results=5,
-    )
+    # Initialize Tavily client directly
+    client = TavilyClient(api_key=tavily_api_key)
     
-    return search
+    return client
 
 def search_medical_information(topic: str, max_results: int = 5) -> str:
     """
@@ -64,7 +62,7 @@ def search_medical_information(topic: str, max_results: int = 5) -> str:
     """
     
     try:
-        search_tool = initialize_tavily_search()
+        client = initialize_tavily_search()
     except EnvironmentError as e:
         raise e
     
@@ -72,9 +70,18 @@ def search_medical_information(topic: str, max_results: int = 5) -> str:
     search_query = f"{topic} patient education medical information"
     
     try:
-        # Execute search
-        results = search_tool.invoke(search_query)
-        return results
+        # Execute search using Tavily client
+        results = client.search(search_query, max_results=max_results)
+        
+        # Format results
+        formatted_results = ""
+        if results and "results" in results:
+            for i, result in enumerate(results["results"], 1):
+                formatted_results += f"\n{i}. {result.get('title', 'No title')}\n"
+                formatted_results += f"   Source: {result.get('url', 'No URL')}\n"
+                formatted_results += f"   {result.get('content', 'No content')[:300]}...\n"
+        
+        return formatted_results if formatted_results else "No results found"
     except Exception as e:
         raise Exception(f"Error searching for medical information: {str(e)}")
 

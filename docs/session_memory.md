@@ -48,6 +48,79 @@ This file records the major actions, decisions, and artifacts produced during in
   Next steps: If you want executed artifacts removed from git history as well, I can prepare a history-rewrite plan (uses `git filter-repo` or BFG) but this requires force-push and coordination with other collaborators.
 
   ## 2025-12-17: Move runner into `scripts/`
+  
+  ## 2025-12-19: Enhanced playground notebooks with comprehensive educational content
+  
+  - Date: 2025-12-19
+  - Purpose: Transform playground/01 and playground/02 notebooks into comprehensive learning resources matching playground/03 quality
+  
+  - Actions performed:
+    - Enhanced `playground/01_basics_overview.ipynb`:
+      - Rewrote introduction explaining what you'll learn, why it matters, and prerequisites
+      - Step 1 (Configuration): Added detailed inline comments (85 lines) explaining find_upwards() and load_dotenv_if_present()
+      - Added "What Just Happened?" explanation cell after configuration loading
+      - Step 2 (Message Structure): Complete rewrite explaining LLM message structure with roles
+      - Enhanced message structure code with detailed comments and formatted output
+      - Added "What You Just Learned" summary after message structure
+      - Step 3 (Prompt Engineering): Rewrote with principles and template pattern explanation
+      - Enhanced template example with two use cases and detailed comments
+      - Added "Understanding Templates" explanation
+      - Step 4 (Memory): Complete rewrite explaining memory importance and management
+      - Enhanced Memory class code with extensive docstrings (120+ lines total)
+      - Added "What Just Happened?" explanation after Memory demo
+      - Rewrote exercises section with 4 detailed exercises including requirements, examples, and "Why This Matters"
+    
+    - Enhanced `playground/02_code_examples.ipynb`:
+      - Rewrote introduction as comprehensive learning guide
+      - Added "What You'll Learn", "Why This Matters", "Prerequisites", and "Learning Path" sections
+      - Step 1 (Memory): Added explanation of why memory matters and self-contained design
+      - Enhanced Memory class code with extensive docstrings and detailed demo
+      - Added "What Just Happened?" explanation after Memory setup
+      - Step 2 (Tools): Complete rewrite explaining tool design principles and real-world examples
+      - Enhanced tool stubs with detailed docstrings (60+ lines each)
+      - Added comprehensive tool testing demo
+      - Added "What Just Happened?" with production migration examples
+      - Step 3 (Agent Loop): Extensive explanation of agent loop components and patterns
+      - Enhanced minimal_agent with detailed docstrings (80+ lines)
+      - Added comprehensive 3-test demo showing different routing scenarios
+      - Added "What Just Happened?" explaining routing decisions and LLM evolution path
+      - Rewrote exercises section with 4 detailed exercises (confidence scoring, tool registry, multi-tool chaining, error handling)
+      - Added "What You've Learned" summary and "Next Steps" guidance
+  
+  - Evaluated:
+    - Current notebook quality: Original versions were minimal with basic code and brief explanations
+    - Needed improvements: Detailed explanations, inline comments, "What happened?" cells, structured exercises
+    - Template: playground/03_rag_kb.ipynb with 7-step structure and comprehensive explanations
+    - Result: Both notebooks now match playground/03 educational quality with professional detailed content
+  
+  - Results:
+    - playground/01_basics_overview.ipynb: 100% enhanced (all 4 steps complete with detailed explanations)
+    - playground/02_code_examples.ipynb: 100% enhanced (all 3 steps complete with detailed explanations)
+    - Both notebooks now provide excellent learning resources with:
+      - Comprehensive introductions explaining context and goals
+      - Detailed inline code comments explaining every concept
+      - "What Just Happened?" cells after each major section
+      - Professional exercises with requirements, examples, and rationale
+      - Clear next steps and learning path guidance
+  
+  - Files changed:
+    - Modified: `playground/01_basics_overview.ipynb` (comprehensive enhancement)
+    - Modified: `playground/02_code_examples.ipynb` (comprehensive enhancement)
+    - Modified: `docs/session_memory.md` (this entry)
+  
+  - Rationale:
+    - User explicitly requested: "I am learning all this and I need good resources to read and help me"
+    - User clarified scope: Only enhance playground notebooks, NOT L1/L2/L3/L4 course materials
+    - User requested both notebooks enhanced: "lets do A AND B first"
+    - Following established pattern from playground/03_rag_kb.ipynb
+    - Maintains professional standards: no emojis, track changes, use .venv, maintain big picture plan
+  
+  - Next steps:
+    - Commit both enhanced notebooks with clear message
+    - Push changes to origin/main
+    - Ready to enhance additional playground notebooks or move to next stage
+  
+  ## 2025-12-17: Move runner into `scripts/`
 
   - Action: Moved the temporary notebook runner from project root into `scripts/run_notebooks.py` and added a header and usage notes.
   - Reason: Per housekeeping rules, scripts used for validation or CI belong in `scripts/`. This keeps the project root tidy and makes the utility discoverable.
